@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " R ",
+    " S ",
+    " W "
+  ],
+  "key": {
+    "R": { "item": "minecraft:rose_bush" },
+    "S": { "item": "minecraft:stick" },
+    "W": { "item": "minecraft:iron_ingot" }
+  },
+  "result": {
+    "item": "beautymod:lipstick",
+    "count": 1
+  }
+}
