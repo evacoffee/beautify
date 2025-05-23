@@ -5,9 +5,15 @@ import com.evacoffee.beautymod.command.LoveCommand;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import com.yourname.beautymod.events.GiftHandler;
+import com.yourname.beautymod.particles.ParticleHandler;
 
 // inside onInitialize()
 GiftHandler.register();
+
+
+// inside onInitialize()
+ParticleHandler.register();
+
 
 public class BeautyMod implements ModInitializer {
     @Override
