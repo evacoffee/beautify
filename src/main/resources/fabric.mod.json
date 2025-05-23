@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "beautymod",
+  "version": "1.0.0",
+  "name": "Beauty Mod",
+  "description": "Adds beauty and romance to Minecraft!",
+  "authors": ["yourname"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.evacoffee.beautymod.BeautyMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.22",
+    "fabric": "*",
+    "minecraft": "1.20.1"
+  }
+}
