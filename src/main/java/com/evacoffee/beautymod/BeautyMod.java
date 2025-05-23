@@ -7,11 +7,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import com.yourname.beautymod.events.GiftHandler;
 import com.yourname.beautymod.particles.ParticleHandler;
 
-// inside onInitialize()
-GiftHandler.register();
-
-
-// inside onInitialize()
+// inside onInitialize(import com.yourname.beautymod.entity.ModEntities;ModEntities.registerEntities();)
+GiftHandler.register()
 ParticleHandler.register();
 
 
