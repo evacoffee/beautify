@@ -3,18 +3,26 @@
   "id": "beautymod",
   "version": "1.0.0",
   "name": "Beauty Mod",
-  "description": "Adds beauty and romance to Minecraft!",
+  "description": "A mod that adds beauty-themed items and romance NPCs.",
   "authors": ["yourname"],
+  "contact": {
+    "homepage": "https://github.com/evacoffee/beautymod",
+    "sources": "https://github.com/evacoffee/beautymod"
+  },
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
     "main": [
       "com.evacoffee.beautymod.BeautyMod"
+    ],
+    "client": [
+      "com.evacoffee.beautymod.BeautyModClient"
     ]
   },
   "depends": {
-    "fabricloader": ">=0.14.22",
+    "fabricloader": ">=0.14.21",
     "fabric": "*",
-    "minecraft": "1.20.1"
+    "minecraft": "1.20.1",
+    "java": ">=17"
   }
 }
