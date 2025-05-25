@@ -1,17 +1,31 @@
-{
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " R ",
-    " S ",
-    " W "
-  ],
-  "key": {
-    "R": { "item": "minecraft:rose_bush" },
-    "S": { "item": "minecraft:stick" },
-    "W": { "item": "minecraft:iron_ingot" }
-  },
-  "result": {
-    "item": "beautymod:lipstick",
-    "count": 1
-  }
+package com.evacoffee.beautymod;
+
+import com.evacoffee.beautymod.entity.NPCRegistry;
+import net.fabricmc.api.ModInitializer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.util.Identifier;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+
+public class BeautyMod implements ModInitializer {
+
+    // Registering the lipstick item
+    public static final Item LIPSTICK = Registry.register(
+        Registries.ITEM,
+        new Identifier("beautymod", "lipstick"),
+        new Item(new Item.Settings().maxCount(1).group(ItemGroup.MISC))
+    );
+
+    @Override
+    public void onInitialize() {
+        // Register NPC types
+        NPCRegistry.registerNPCs();
+
+        // Item registration confirmation
+        System.out.println("Lipstick item registered!");
+
+        // Additional initialization can go here (items, blocks, etc.)
+        System.out.println("Beauty Mod has been initialized!");
+    }
 }
