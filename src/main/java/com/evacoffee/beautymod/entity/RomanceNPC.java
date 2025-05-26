@@ -1,106 +1,123 @@
-package com.evacoffee.beautymod.entity;
+package com.yourname.beautymod.entity;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
+import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
-public class RomanceNPC extends VillagerEntity {
+import java.util.HashMap;
+import java.util.Map;
 
-    private String name = "Unknown";
-    private String personality = "Neutral";
-    private String race = "Human";
-    private int lovePoints = 0;
+public class RomanceNPC extends PathAwareEntity {
 
-    public RomanceNPC(EntityType<? extends VillagerEntity> entityType, World world) {
+    private String npcName;
+    private String personality;
+    private String[] dialogueLines;
+    private Identifier texture;
+
+    public RomanceNPC(EntityType<? extends RomanceNPC> entityType, World world) {
         super(entityType, world);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    // === Attributes for movement and health ===
+    public static DefaultAttributeContainer.Builder createMobAttributes() {
+        return PathAwareEntity.createMobAttributes()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3);
     }
 
-    public void setPersonality(String personality) {
+    // === NPC Configuration ===
+    public void setNPCInfo(String name, String personality, String[] lines, Identifier texture) {
+        this.npcName = name;
         this.personality = personality;
-    }
-
-    public void setRace(String race) {
-        this.race = race;
-    }
-
-    public void increaseLove(PlayerEntity player, int amount) {
-        this.lovePoints += amount;
-        player.sendMessage(Text.of(getLoveMessage()), true);
-    }
-
-    public String getPersonality() {
-        return this.personality;
+        this.dialogueLines = lines;
+        this.texture = texture;
     }
 
     public String getNPCName() {
-        return this.name;
+        return npcName;
     }
 
-    public int getLovePoints() {
-        return this.lovePoints;
+    public String getPersonality() {
+        return personality;
     }
 
-    public String getRace() {
-        return this.race;
+    public String[] getDialogueLines() {
+        return dialogueLines;
     }
 
-    private String getLoveMessage() {
-        boolean highLove = lovePoints >= 50;
+    public Identifier getTexture() {
+        return texture;
+    }
 
-        switch (personality.toLowerCase()) {
-            case "shy":
-                return highLove ? name + ": I’m really glad you’re here... ❤️" : name + ": ...Hi.";
-            case "flirty":
-                return highLove ? name + ": You’ve totally got my heart, babe 💋" : name + ": Hey cutie 😉";
-            case "artistic":
-                return highLove ? name + ": You are my muse. 🎨" : name + ": Have you ever seen a sunset in watercolor?";
-            case "kind":
-                return highLove ? name + ": You’re wonderful, and I’m lucky to know you." : name + ": How are you feeling today?";
-            case "cool":
-                return highLove ? name + ": Wanna hang out sometime? 😎" : name + ": Damn. You look beautiful.";
-            case "charismatic":
-                return highLove ? name + ": I like you." : name + ": Did you know love boosts serotonin? I'm feeling really happy right now.";
-            case "nerdy":
-                return highLove ? name + ": I like spending time with you..." : name + ": Nice to meet you. You are beautiful.";
-            case "funny":
-                return highLove ? name + ": You laugh at my jokes. You must love me." : name + ": Why don’t we skip to the kiss scene?";
-            default:
-                return name + ": Hi!";
+    // === Static predefined NPC data ===
+    public static final Map<String, NPCInfo> NPC_DATA = new HashMap<>();
+
+    static {
+        NPC_DATA.put("luna", new NPCInfo("Luna", "Shy", new String[]{
+                "Oh! I didn’t expect to see you here...",
+                "Do you... like flowers too?",
+                "Let’s take a walk... if you want."
+        }, "beautymod:textures/entity/luna.png"));
+
+        NPC_DATA.put("zara", new NPCInfo("Zara", "Flirty", new String[]{
+                "Hey cutie~ Looking good today.",
+                "Wanna rob some villigars together?",
+                "You know you’re my favorite, right?"
+        }, "beautymod:textures/entity/zara.png"));
+
+        NPC_DATA.put("mira", new NPCInfo("Mira", "Artistic", new String[]{
+                "I painted this for you... hope you like it!",
+                "Beauty is everywhere—especially in you.",
+                "Want to help me design a new mural?"
+        }, "beautymod:textures/entity/mira.png"));
+
+        NPC_DATA.put("celia", new NPCInfo("Celia", "Cool", new String[]{
+                "Hey. Need anything?",
+                "I’ve got your back. Always.",
+                "Let’s watch under the stars tonight."
+        }, "beautymod:textures/entity/celia.png"));
+
+        NPC_DATA.put("kai", new NPCInfo("Kai", "Charming", new String[]{
+                "Looking radiant as always.",
+                "A rose for a rose.",
+                "How about a dance?"
+        }, "beautymod:textures/entity/kai.png"));
+
+        NPC_DATA.put("dante", new NPCInfo("Dante", "Mysterious", new String[]{
+                "There’s more to me than meets the eye.",
+                "Want to see a secret place?",
+                "You ask a lot of interesting questions..."
+        }, "beautymod:textures/entity/dante.png"));
+
+        NPC_DATA.put("theo", new NPCInfo("Theo", "Sweet", new String[]{
+                "I baked these cookies for you!",
+                "Let’s watch the sunset together.",
+                "You make everything better."
+        }, "beautymod:textures/entity/theo.png"));
+
+        NPC_DATA.put("rico", new NPCInfo("Rico", "Bold", new String[]{
+                "Let’s build something big—together!",
+                "No challenge is too big if you’re with me!",
+                "Hey! You light up my world!"
+        }, "beautymod:textures/entity/rico.png"));
+    }
+
+    // === Helper class for defining NPCs ===
+    public static class NPCInfo {
+        public final String name;
+        public final String personality;
+        public final String[] dialogue;
+        public final String texturePath;
+
+        public NPCInfo(String name, String personality, String[] dialogue, String texturePath) {
+            this.name = name;
+            this.personality = personality;
+            this.dialogue = dialogue;
+            this.texturePath = texturePath;
         }
-    }
-
-    @Override
-    public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (!player.getWorld().isClient) {
-            increaseLove(player, 10); // Every interaction increases love
-        }
-        return ActionResult.SUCCESS;
-    }
-
-    @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
-        nbt.putString("npcName", this.name);
-        nbt.putString("personality", this.personality);
-        nbt.putString("race", this.race);
-        nbt.putInt("lovePoints", this.lovePoints);
-    }
-
-    @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        this.name = nbt.getString("npcName");
-        this.personality = nbt.getString("personality");
-        this.race = nbt.getString("race");
-        this.lovePoints = nbt.getInt("lovePoints");
     }
 }

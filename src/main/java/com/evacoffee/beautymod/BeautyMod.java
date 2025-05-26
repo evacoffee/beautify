@@ -1,24 +1,29 @@
 package com.evacoffee.beautymod;
 
-import com.evacoffee.beautymod.item.ModItems;
-import com.evacoffee.beautymod.command.LoveCommand;
+import com.evacoffee.beautymod.entity.NPCRegistry;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import com.yourname.beautymod.events.GiftHandler;
-import com.yourname.beautymod.particles.ParticleHandler;
-
-// inside onInitialize(import com.yourname.beautymod.entity.ModEntities;ModEntities.registerEntities();)
-GiftHandler.register()
-ParticleHandler.register();
-
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.util.Identifier;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 public class BeautyMod implements ModInitializer {
+
+    // Register a beauty item: lipstick
+    public static final Item LIPSTICK = Registry.register(
+        Registries.ITEM,
+        new Identifier("beautymod", "lipstick"),
+        new Item(new Item.Settings().maxCount(1))
+    );
+
     @Override
     public void onInitialize() {
-        ModItems.registerModItems();
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            LoveCommand.register(dispatcher);
-        });
-        System.out.println("Beauty Mod initialized.");
+        // Register custom romance NPCs
+        NPCRegistry.registerNPCs();
+
+        // Confirm mod and item loaded
+        System.out.println("Beauty Mod has been initialized!");
+        System.out.println("Lipstick item registered!");
     }
 }
