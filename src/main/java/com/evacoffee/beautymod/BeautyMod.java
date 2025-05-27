@@ -18,7 +18,14 @@ public class BeautyMod implements ModInitializer {
     );
 
     @Override
-    public void onInitialize() {
+    public void onInitialize() {import com.yourname.beautymod.player.AffectionComponentInitializer;
+
+@Override
+public void onInitialize() {
+    AffectionComponentInitializer.AFFECTION.getClass(); // Ensures the component is registered
+    // other init code...
+}
+
         // Register custom romance NPCs
         NPCRegistry.registerNPCs();
 
