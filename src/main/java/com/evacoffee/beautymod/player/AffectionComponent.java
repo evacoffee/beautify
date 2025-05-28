@@ -1,15 +1,20 @@
 package com.evacoffee.beautymod.player;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class AffectionComponent implements Component {
-
     // Stores affection values per NPC
     private final Map<String, Integer> affectionMap = new HashMap<>();
+
+    // Static helper method to get the component for a player
+    public static AffectionComponent get(PlayerEntity player) {
+        return AffectionComponentInitializer.get(player);
+    }
 
     // Sets affection for a specific NPC
     public void setAffection(String npcName, int value) {
