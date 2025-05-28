@@ -1,100 +1,88 @@
 package com.evacoffee.beautymod.marriage;
 
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class MarriageManager {
-    private final Map<UUID, MarriageProposal> proposals = new ConcurrentHashMap<>();
-    private final Map<UUID, Long> cooldowns = new ConcurrentHashMap<>();
-    
-    private static final long PROPOSAL_EXPIRE_TIME = 5 * 60 * 1000; // 5 minutes
-    private static final long MARRIAGE_COOLDOWN = 24 * 60 * 60 * 1000; // 24 hours
-    
-    public boolean createProposal(ServerPlayerEntity proposer, ServerPlayerEntity target) {
-        // Check cooldown
-        if (cooldowns.getOrDefault(proposer.getUuid(), 0L) > System.currentTimeMillis()) {
-            long remaining = (cooldowns.get(proposer.getUuid()) - System.currentTimeMillis()) / 1000;
-            long minutes = remaining / 60;
-            long seconds = remaining % 60;
-            proposer.sendMessage(Text.literal(String.format("You must wait %d minutes and %d seconds before proposing again!", 
-                minutes, seconds)).formatted(Formatting.RED), false);
+    private static final Map<UUID, UUID> MARRIAGES = new HashMap<>();
+    private static final Map<UUID, BlockPos> MARRIAGE_HOMES = new HashMap<>();
+    private static final Map<UUID, World> MARRIAGE_WORLDS = new HashMap<>();
+    private static final Map<UUID, UUID> MARRIAGE_PROPOSALS = new HashMap<>();
+    private static final Map<UUID, Long> LAST_TELEPORT_REQUESTS = new HashMap<>();
+
+    public static boolean marry(ServerPlayerEntity player1, ServerPlayerEntity player2) {
+        UUID uuid1 = player1.getUuid();
+        UUID uuid2 = player2.getUuid();
+        
+        if (isMarried(uuid1) || isMarried(uuid2)) {
             return false;
         }
-        
-        // Create and store proposal
-        MarriageProposal proposal = new MarriageProposal(proposer, target, System.currentTimeMillis());
-        proposals.put(proposer.getUuid(), proposal);
-        
-        // Schedule cleanup
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (proposals.containsKey(proposer.getUuid())) {
-                    proposals.remove(proposer.getUuid());
-                    proposer.sendMessage(Text.literal("Your proposal to " + target.getName().getString() + " has expired.")
-                        .formatted(Formatting.GRAY), false);
-                }
-            }
-        }, PROPOSAL_EXPIRE_TIME);
-        
+
+        MARRIAGES.put(uuid1, uuid2);
+        MARRIAGES.put(uuid2, uuid1);
         return true;
     }
-    
-    public boolean hasPendingProposal(ServerPlayerEntity proposer, ServerPlayerEntity target) {
-        MarriageProposal proposal = proposals.get(proposer.getUuid());
-        return proposal != null && 
-               proposal.getTarget().getUuid().equals(target.getUuid()) &&
-               !proposal.isExpired();
-    }
-    
-    public void clearProposal(ServerPlayerEntity proposer) {
-        proposals.remove(proposer.getUuid());
-    }
-    
-    public void setCooldown(ServerPlayerEntity player) {
-        cooldowns.put(player.getUuid(), System.currentTimeMillis() + MARRIAGE_COOLDOWN);
-    }
-    
-    public void clearCooldown(ServerPlayerEntity player) {
-        cooldowns.remove(player.getUuid());
-    }
-    
-    public boolean isOnCooldown(ServerPlayerEntity player) {
-        return cooldowns.getOrDefault(player.getUuid(), 0L) > System.currentTimeMillis();
-    }
-    
-    public long getRemainingCooldown(ServerPlayerEntity player) {
-        return Math.max(0, cooldowns.getOrDefault(player.getUuid(), 0L) - System.currentTimeMillis());
-    }
-    
-    private static class MarriageProposal {
-        private final ServerPlayerEntity proposer;
-        private final ServerPlayerEntity target;
-        private final long timestamp;
-        
-        public MarriageProposal(ServerPlayerEntity proposer, ServerPlayerEntity target, long timestamp) {
-            this.proposer = proposer;
-            this.target = target;
-            this.timestamp = timestamp;
+
+    public static boolean divorce(UUID playerUuid) {
+        UUID spouseUuid = MARRIAGES.get(playerUuid);
+        if (spouseUuid != null) {
+            MARRIAGES.remove(playerUuid);
+            MARRIAGES.remove(spouseUuid);
+            MARRIAGE_HOMES.remove(playerUuid);
+            MARRIAGE_HOMES.remove(spouseUuid);
+            return true;
         }
-        
-        public ServerPlayerEntity getProposer() {
-            return proposer;
-        }
-        
-        public ServerPlayerEntity getTarget() {
-            return target;
-        }
-        
-        public long getTimestamp() {
-            return timestamp;
-        }
-        
-        public boolean isExpired() {
-            return System.currentTimeMillis() - timestamp > PROPOSAL_EXPIRE_TIME;
-        }
+        return false;
+    }
+
+    public static boolean isMarried(UUID playerUuid) {
+        return MARRIAGES.containsKey(playerUuid);
+    }
+
+    public static UUID getSpouse(UUID playerUuid) {
+        return MARRIAGES.get(playerUuid);
+    }
+
+    public static void setHome(ServerPlayerEntity player) {
+        MARRIAGE_HOMES.put(player.getUuid(), player.getBlockPos());
+        MARRIAGE_WORLDS.put(player.getUuid(), player.getWorld());
+    }
+
+    public static BlockPos getHomePosition(UUID playerUuid) {
+        return MARRIAGE_HOMES.get(playerUuid);
+    }
+
+    public static World getHomeWorld(UUID playerUuid) {
+        return MARRIAGE_WORLDS.get(playerUuid);
+    }
+
+    public static void propose(ServerPlayerEntity proposer, ServerPlayerEntity target) {
+        MARRIAGE_PROPOSALS.put(target.getUuid(), proposer.getUuid());
+    }
+
+    public static boolean hasPendingProposal(ServerPlayerEntity player) {
+        return MARRIAGE_PROPOSALS.containsKey(player.getUuid());
+    }
+
+    public static UUID getProposer(ServerPlayerEntity player) {
+        return MARRIAGE_PROPOSALS.get(player.getUuid());
+    }
+
+    public static void clearProposal(ServerPlayerEntity player) {
+        MARRIAGE_PROPOSALS.remove(player.getUuid());
+    }
+
+    public static boolean canRequestTeleport(ServerPlayerEntity player) {
+        Long lastRequest = LAST_TELEPORT_REQUESTS.get(player.getUuid());
+        return lastRequest == null || (System.currentTimeMillis() - lastRequest) > 60000; // 1 minute cooldown
+    }
+
+    public static void setLastTeleportRequest(ServerPlayerEntity player) {
+        LAST_TELEPORT_REQUESTS.put(player.getUuid(), System.currentTimeMillis());
     }
 }

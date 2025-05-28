@@ -1,11 +1,12 @@
 package com.evacoffee.beautymod.marriage;
 
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 public enum MarriagePerk {
-    SHARED_INVENTORY("Shared Inventory", 1, "Allows sharing items with your spouse"),
+    SHARED_INVENTORY("Shared Inventory", 1, "Access a shared storage with your spouse"),
     HOME_TELEPORT("Home Teleport", 5, "Teleport to your shared home"),
-    SPOUSE_TELEPORT("Spouse Teleport", 10, "Teleport to your spouse"),
+    SPOUSE_TELEPORT("Spouse Teleport", 10, "Teleport to your spouse's location"),
     SHARED_XP("Shared XP", 15, "Earn bonus XP when near your spouse"),
     LUCKY_CHARM("Lucky Charm", 20, "Increased luck when together"),
     SOUL_BOND("Soul Bond", 25, "Share a portion of your health with your spouse"),
@@ -28,7 +29,7 @@ public enum MarriagePerk {
     }
 
     public Text getDisplayText() {
-        return Text.translatable("perk.beautymod.marriage." + name().toLowerCase());
+        return Text.literal(displayName).formatted(Formatting.LIGHT_PURPLE);
     }
 
     public int getLevelRequired() {
@@ -40,7 +41,7 @@ public enum MarriagePerk {
     }
 
     public Text getDescriptionText() {
-        return Text.translatable("perk.beautymod.marriage." + name().toLowerCase() + ".desc");
+        return Text.literal(description).formatted(Formatting.GRAY);
     }
 
     public static MarriagePerk fromString(String name) {
