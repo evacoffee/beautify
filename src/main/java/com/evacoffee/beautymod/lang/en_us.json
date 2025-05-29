@@ -1,13 +1,15 @@
 {
   // Items
   "item.beautymod.adoption_papers": "Adoption Papers",
+  "item.beautymod.anniversary_cake": "Family Anniversary Cake",
+  "item.beautymod.anniversary_cake.desc": "A special cake to celebrate your family!",
   "itemGroup.beautymod.main": "Beauty Mod",
   
   // Adoption System
   "text.beautymod.adoption.request": "%s wants to adopt you!",
   "text.beautymod.adoption.request_sent": "Adoption request sent to %s",
   "text.beautymod.adoption.already_related": "You are already related to this player",
-  "text.beautymod.adoption.max_parents": "This player already has the maximum number of parents",
+  "text.beautymod.adoption.not_in_family": "You are not in a family",
   "text.beautymod.adoption.success": "Successfully adopted %s",
   "text.beautymod.adoption.denied": "Adoption request denied",
   "text.beautymod.adoption.self_adopt": "You cannot adopt yourself!",
@@ -41,6 +43,45 @@
   "text.beautymod.pet.teleporting": "Your pets are following you...",
   "text.beautymod.pet.too_many_pets": "Your family has too many pets! (Max: %d)",
   "text.beautymod.pet.not_owner": "This pet doesn't belong to your family",
+  
+  // Events
+  "event.beautymod.new_year": "Happy New Year! Enjoy special buffs with your family!",
+  "event.beautymod.valentines": "Happy Valentine's Day! Show your family some love!",
+  "event.beautymod.halloween": "Spooky Halloween! Family members drop extra candy!",
+  "event.beautymod.christmas": "Merry Christmas! Find presents under decorated trees!",
+  "event.beautymod.anniversary": "Happy %d year anniversary to your family!",
+  
+  // Event Messages
+  "message.beautymod.event.buff": "You feel stronger near your family!",
+  "message.beautymod.event.gift": "You received a special gift!",
+  "message.beautymod.event.ended": "The %s event has ended. See you next time!",
+  
+  // Lore System
+  "lore.beautymod.title": "Character Lore",
+  "lore.beautymod.select_background": "Select Your Background",
+  "lore.beautymod.background_selected": "Selected background: %s",
+  
+  // Noble Background
+  "lore.beautymod.noble.title": "Noble Lineage",
+  "lore.beautymod.noble.desc": "Born into a family of high status, you were raised with privilege and responsibility in equal measure.",
+  "lore.beautymod.noble.effect.trade": "Better trades with villagers",
+  "lore.beautymod.noble.bonus": "Your family gains a bonus to reputation with villagers",
+  
+  // Wanderer Background
+  "lore.beautymod.wanderer.title": "Wandering Soul",
+  "lore.beautymod.wanderer.desc": "You've spent your life traveling from place to place, never staying in one spot for too long.",
+  "lore.beautymod.wanderer.effect.speed": "Increased movement speed",
+  
+  // Scholar Background
+  "lore.beautymod.scholar.title": "Academic Mind",
+  "lore.beautymod.scholar.desc": "Your thirst for knowledge has led you to study ancient tomes and forgotten lore.",
+  "lore.beautymod.scholar.effect.xp": "Bonus experience from all sources",
+  
+  // Family History Events
+  "lore.beautymod.event.family_founded": "Family Founded",
+  "lore.beautymod.event.member_joined": "%s joined the family",
+  "lore.beautymod.event.anniversary": "%d Year Anniversary",
+  "lore.beautymod.event.achievement": "Achievement Unlocked: %s",
   
   // GUI
   "gui.beautymod.adoption.title": "Adoption Request",

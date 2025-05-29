@@ -2,13 +2,11 @@
   "schemaVersion": 1,
   "id": "beautymod",
   "version": "${version}",
-  "name": "BeautyMod",
-  "description": "A mod that adds marriage and relationships to Minecraft",
-  "authors": [
-    "YourName"
-  ],
+  "name": "Beauty Mod",
+  "description": "A mod that adds family relationships, pets, and more!",
+  "authors": ["evacoffee"],
   "contact": {
-    "homepage": "https://your-website.com/",
+    "homepage": "https://example.com/",
     "sources": "https://github.com/yourusername/beautymod",
     "issues": "https://github.com/yourusername/beautymod/issues"
   },
@@ -22,11 +20,8 @@
     "client": [
       "com.evacoffee.beautymod.client.BeautyModClient"
     ],
-    "server": [
-      "com.evacoffee.beautymod.server.BeautyModServer"
-    ],
-    "cardinal-components-entity": [
-      "com.evacoffee.beautymod.marriage.MarriageComponentInitializer"
+    "cardinal-components": [
+      "com.evacoffee.beautymod.components.Components"
     ]
   },
   "mixins": [
@@ -35,16 +30,17 @@
   "depends": {
     "fabricloader": ">=0.14.21",
     "fabric-api": "*",
-    "minecraft": "1.20.x",
-    "java": ">=17",
-    "fabric-language-kotlin": ">=1.10.0"
+    "fabric-language-kotlin": ">=1.9.5+kotlin.1.8.22",
+    "minecraft": "~1.20.1",
+    "java": ">=17"
   },
   "suggests": {
-    "another-mod": "*"
+    "modmenu": ">=4.0.0"
   },
   "custom": {
     "cardinal-components": [
-      "beautymod:marriage"
+      "beautymod:family",
+      "beautymod:player_data"
     ]
   }
 }
