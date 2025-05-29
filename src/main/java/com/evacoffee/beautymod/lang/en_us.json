@@ -1,0 +1,8 @@
+{
+  "item.beautymod.adoption_papers": "Adoption Papers",
+  "text.beautymod.adoption.request": "%s wants to adopt you!",
+  "text.beautymod.adoption.request_sent": "Adoption request sent to %s",
+  "text.beautymod.adoption.already_related": "You are already related to this player",
+  "text.beautymod.adoption.max_parents": "This player already has the maximum number of parents",
+  "text.beautymod.adoption.success": "Successfully adopted %s"
+}
