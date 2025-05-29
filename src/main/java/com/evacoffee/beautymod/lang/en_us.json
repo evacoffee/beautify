@@ -1,8 +1,56 @@
 {
+  // Items
   "item.beautymod.adoption_papers": "Adoption Papers",
+  "itemGroup.beautymod.main": "Beauty Mod",
+  
+  // Adoption System
   "text.beautymod.adoption.request": "%s wants to adopt you!",
   "text.beautymod.adoption.request_sent": "Adoption request sent to %s",
   "text.beautymod.adoption.already_related": "You are already related to this player",
   "text.beautymod.adoption.max_parents": "This player already has the maximum number of parents",
-  "text.beautymod.adoption.success": "Successfully adopted %s"
+  "text.beautymod.adoption.success": "Successfully adopted %s",
+  "text.beautymod.adoption.denied": "Adoption request denied",
+  "text.beautymod.adoption.self_adopt": "You cannot adopt yourself!",
+  "text.beautymod.adoption.invalid_target": "You can only adopt players!",
+  
+  // Family Commands
+  "command.beautymod.family.usage": "/family <adopt|info|list> [player]",
+  "command.beautymod.family.adopt.usage": "/family adopt <player>",
+  "command.beautymod.family.adopt.success": "Sent adoption request to %s",
+  "command.beautymod.family.adopt.failed": "Failed to send adoption request: %s",
+  "command.beautymod.family.info.self": "Your family: %s",
+  "command.beautymod.family.info.other": "%s's family: %s",
+  "command.beautymod.family.list.self": "Your family members: %s",
+  "command.beautymod.family.list.other": "%s's family members: %s",
+  
+  // Achievements
+  "achievement.beautymod.new_family": "New Family",
+  "achievement.beautymod.new_family.desc": "Start your family with your first adoption",
+  "achievement.beautymod.big_happy_family": "Big Happy Family",
+  "achievement.beautymod.big_happy_family.desc": "Have 5 or more family members",
+  "achievement.beautymod.family_reunion": "Family Reunion",
+  "achievement.beautymod.family_reunion.desc": "Gather all family members in one place",
+  "achievement.beautymod.pet_lover": "Pet Lover",
+  "achievement.beautymod.pet_lover.desc": "Feed a family pet",
+  "achievement.beautymod.family_zoo": "Family Zoo",
+  "achievement.beautymod.family_zoo.desc": "Have 5 or more family pets",
+  
+  // Pet System
+  "text.beautymod.pet.fed": "You fed %s!",
+  "text.beautymod.pet.healed": "%s looks healthier now!",
+  "text.beautymod.pet.teleporting": "Your pets are following you...",
+  "text.beautymod.pet.too_many_pets": "Your family has too many pets! (Max: %d)",
+  "text.beautymod.pet.not_owner": "This pet doesn't belong to your family",
+  
+  // GUI
+  "gui.beautymod.adoption.title": "Adoption Request",
+  "gui.beautymod.adoption.message": "%s wants to adopt you!",
+  "gui.beautymod.adoption.accept": "Accept",
+  "gui.beautymod.adoption.deny": "Deny",
+  
+  // Errors
+  "error.beautymod.generic": "An error occurred: %s",
+  "error.beautymod.player_not_found": "Player not found: %s",
+  "error.beautymod.not_in_family": "You are not in a family",
+  "error.beautymod.no_permission": "You don't have permission to do that"
 }
