@@ -1,0 +1,11 @@
+# This file is used for widening access to Minecraft classes and members
+# Format: <access> <class> <name> <descriptor>?
+# access: accessible, extendable, or mutable
+# class: The fully qualified class name (e.g., net/minecraft/entity/player/PlayerEntity)
+# name: The name of the field/method, or <init> for constructors
+# descriptor: The field/method descriptor (e.g., (I)V for a method taking int and returning void)
+
+# Example usage (uncomment and modify as needed):
+# accessible net/minecraft/entity/player/PlayerEntity field_7519 I  # Makes a private field public
+# extendable net/minecraft/block/Block                       # Makes a class extendable
+# mutable   net/minecraft/world/World field_175680_u         # Makes a final field non-final

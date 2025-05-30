@@ -5,10 +5,12 @@
   "name": "Beauty Mod",
   "description": "A mod that adds family relationships, pets, and more!",
   "authors": ["evacoffee"],
+  "contributors": [],
   "contact": {
     "homepage": "https://example.com/",
     "sources": "https://github.com/yourusername/beautymod",
-    "issues": "https://github.com/yourusername/beautymod/issues"
+    "issues": "https://github.com/yourusername/beautymod/issues",
+    "discord": "https://discord.gg/yourdiscord"
   },
   "license": "MIT",
   "icon": "assets/beautymod/icon.png",
@@ -22,6 +24,9 @@
     ],
     "cardinal-components": [
       "com.evacoffee.beautymod.components.Components"
+    ],
+    "modmenu": [
+      "com.evacoffee.beautymod.config.BeautyModMenu"
     ]
   },
   "mixins": [
@@ -35,12 +40,22 @@
     "java": ">=17"
   },
   "suggests": {
-    "modmenu": ">=4.0.0"
+    "modmenu": ">=4.0.0",
+    "cloth-config": ">=8.0.0"
+  },
+  "breaks": {
+    "some-incompatible-mod": "*"
   },
   "custom": {
     "cardinal-components": [
       "beautymod:family",
       "beautymod:player_data"
-    ]
-  }
+    ],
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/yourdiscord"
+      }
+    }
+  },
+  "accessWidener": "beautymod.accesswidener"
 }
