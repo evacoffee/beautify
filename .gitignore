@@ -1,3 +1,63 @@
-.gradle
-settings.gradle
-.github
+# Gradle files
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse
+.settings/
+bin/
+.classpath
+.project
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Mac OS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Local configuration files
+*.properties
+*.json
+!gradle.properties
+!fabric.mod.json
+!mods.toml
+!gradle/wrapper/gradle-wrapper.properties
+
+# Logs
+logs/
+*.log
+logs/
+
+# Run configurations
+run/
+
+# Local data
+local/
+
+# Fabric
+fabric-server-launch.properties
+fabric-installer/
+
+# Minecraft
+eula.txt
+server.properties
+banned-ips.json
+banned-players.json
+ops.json
+usercache.json
+whitelist.json
