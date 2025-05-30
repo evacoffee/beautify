@@ -1,6 +1,7 @@
 package com.evacoffee.beautymod;
 
 import com.evacoffee.beautymod.command.MarriageCommand;
+import com.evacoffee.beautymod.dating.DateCommand;  // Add this import
 import com.evacoffee.beautymod.event.MarriageEvents;
 import com.evacoffee.beautymod.marriage.MarriageComponent;
 import com.evacoffee.beautymod.network.Networking;
@@ -37,6 +38,7 @@ public class BeautyMod implements ModInitializer, EntityComponentInitializer {
         // Register commands
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             MarriageCommand.register(dispatcher);
+            DateCommand.register();  // Register dating commands
         });
         
         // Register events
@@ -50,10 +52,10 @@ public class BeautyMod implements ModInitializer, EntityComponentInitializer {
         // Register marriage component for players
         registry.registerForPlayers(
             MARRIAGE_COMPONENT,
-            player -> new MarriageComponent((PlayerEntity) player),
+            player -> new MarriageComponent(),
             RespawnCopyStrategy.ALWAYS_COPY
         );
         
-        LOGGER.info("Registered entity component factories");
+        // Register dating components here if needed
     }
 }
