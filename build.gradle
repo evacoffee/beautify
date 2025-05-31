@@ -12,6 +12,12 @@ repositories {
 }
 
 dependencies {
+    // Gson for JSON serialization
+    implementation 'com.google.code.gson:gson:2.10.1'
+    
+    // Required for permission checks
+    modImplementation "me.lucko:fabric-permissions-api:0.2.x"
+    include "me.lucko:fabric-permissions-api:0.2.x"
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"

@@ -3,12 +3,12 @@
   "id": "beautymod",
   "version": "${version}",
   "name": "BeautyMod",
-  "description": "Enhances Minecraft with social interactions and relationships",
+  "description": "Enhances relationships and social interactions in Minecraft",
   "authors": [
-    "Your Name"
+    "YourName"
   ],
   "contact": {
-    "homepage": "https://example.com/",
+    "homepage": "https://github.com/yourusername/beautymod",
     "sources": "https://github.com/yourusername/beautymod",
     "issues": "https://github.com/yourusername/beautymod/issues"
   },
@@ -20,31 +20,46 @@
       "com.evacoffee.beautymod.BeautyMod"
     ],
     "client": [
-      "com.evacoffee.beautymod.BeautyModClient"
+      "com.evacoffee.beautymod.client.BeautyModClient"
+    ],
+    "server": [
+      "com.evacoffee.beautymod.server.BeautyModServer"
     ],
     "modmenu": [
       "com.evacoffee.beautymod.config.ModMenuIntegration"
-    ],
-    "cardinal-components": [
-      "com.evacoffee.beautymod.components.ModComponents"
     ]
   },
   "mixins": [
     "beautymod.mixins.json"
   ],
+  "accessWidener": "beautymod.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.0",
     "fabric": "*",
     "minecraft": "1.20.x",
-    "java": ">=17"
+    "java": ">=17",
+    "fabric-permissions-api-v0": "*",
+    "cloth-config": ">=10.0.0"
   },
   "suggests": {
     "modmenu": ">=4.0.0",
-    "cloth-config": ">=6.2.0"
+    "cloth-config": ">=10.0.0"
+  },
+  "recommends": {
+    "modmenu": ">=4.0.0",
+    "cloth-config": ">=10.0.0"
+  },
+  "breaks": {
+    "optifabric": "*"
   },
   "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/yourdiscord",
+        "modmenu.wiki": "https://github.com/yourusername/beautymod/wiki"
+      }
+    },
     "cardinal-components": [
-      "beautymod:relationships",
       "beautymod:player_data"
     ]
   }
