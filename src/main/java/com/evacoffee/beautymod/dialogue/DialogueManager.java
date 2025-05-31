@@ -8,52 +8,34 @@ import net.minecraft.util.Identifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-/**
- * Manages all dialogue interactions in the game.
- */
 public class DialogueManager {
     private static final Map<String, DialogueNode> DIALOGUE_NODES = new HashMap<>();
     private static final Map<UUID, ActiveDialogue> ACTIVE_DIALOGUES = new HashMap<>();
 
-    /**
-     * Registers a dialogue node with the manager.
-     * @param node The node to register
-     * @throws IllegalArgumentException if a node with the same ID is already registered
-     */
     public static void registerNode(DialogueNode node) {
         if (DIALOGUE_NODES.containsKey(node.getId())) {
-            throw new IllegalArgumentException("Dialogue node with ID " + node.getId() + " is already registered");
+            throw new IllegalArgumentException("Duplicate dialogue node ID: " + node.getId());
         }
         DIALOGUE_NODES.put(node.getId(), node);
     }
 
-    /**
-     * Starts a dialogue for a player.
-     * @param player The player to start the dialogue for
-     * @param startNodeId The ID of the node to start with
-     * @return true if the dialogue was started successfully, false otherwise
-     */
-    public static boolean startDialogue(ServerPlayerEntity player, String startNodeId) {
+    public static boolean startDialogue(ServerPlayerEntity player, String nodeId) {
         if (isInDialogue(player)) {
             return false;
         }
 
-        DialogueNode startNode = DIALOGUE_NODES.get(startNodeId);
-        if (startNode == null) {
+        DialogueNode node = DIALOGUE_NODES.get(nodeId);
+        if (node == null) {
             return false;
         }
 
-        ACTIVE_DIALOGUES.put(player.getUuid(), new ActiveDialogue(startNodeId, startNode));
-        sendDialogueScreen(player, startNode);
+        ACTIVE_DIALOGUES.put(player.getUuid(), new ActiveDialogue(nodeId, node));
+        sendDialogueScreen(player, node);
         return true;
     }
 
-    /**
-     * Handles a player's response to a dialogue.
-     * @param player The player responding
-     * @param optionIndex The index of the option chosen
-     */
     public static void handleResponse(ServerPlayerEntity player, int optionIndex) {
         ActiveDialogue activeDialogue = ACTIVE_DIALOGUES.get(player.getUuid());
         if (activeDialogue == null) {
@@ -65,7 +47,7 @@ public class DialogueManager {
             return;
         }
 
-        DialogueNode.DialogueOption chosenOption = currentNode.getOptions().get(optionIndex);
+        DialogueOption chosenOption = currentNode.getOptions().get(optionIndex);
         chosenOption.getOnSelect().accept(player);
 
         if (chosenOption.getNextNodeId() == null) {
@@ -83,37 +65,40 @@ public class DialogueManager {
         sendDialogueScreen(player, nextNode);
     }
 
-    /**
-     * Ends a player's current dialogue.
-     * @param player The player to end the dialogue for
-     */
-    public static void endDialogue(PlayerEntity player) {
-        ActiveDialogue dialogue = ACTIVE_DIALOGUES.remove(player.getUuid());
-        if (dialogue != null) {
-            player.sendMessage(Text.literal("§7[Conversation ended]"), false);
+    public static void handleChatInput(ServerPlayerEntity player, String message) {
+        if (!isInDialogue(player)) return;
+        
+        try {
+            int choice = Integer.parseInt(message.trim()) - 1; // Convert to 0-based index
+            handleResponse(player, choice);
+        } catch (NumberFormatException e) {
+            player.sendMessage(Text.literal("§cPlease enter a number to select an option."), false);
         }
     }
 
-    /**
-     * Checks if a player is currently in a dialogue.
-     * @param player The player to check
-     * @return true if the player is in a dialogue, false otherwise
-     */
+    public static void endDialogue(PlayerEntity player) {
+        ACTIVE_DIALOGUES.remove(player.getUuid());
+        player.sendMessage(Text.literal("§7[Conversation ended]"), false);
+    }
+
     public static boolean isInDialogue(PlayerEntity player) {
         return ACTIVE_DIALOGUES.containsKey(player.getUuid());
     }
 
     private static void sendDialogueScreen(ServerPlayerEntity player, DialogueNode node) {
         // Clear previous messages
-        player.sendMessage(Text.literal("§7--------------------------------"), false);
+        for (int i = 0; i < 10; i++) {
+            player.sendMessage(Text.literal(""), false);
+        }
         
         // Send NPC name and text
-        player.sendMessage(Text.literal("§e" + node.getNpcName() + ": §f" + node.getText().getString()), false);
+        player.sendMessage(Text.literal("§e" + node.getNpcName() + ": §f" + node.getText()), false);
+        player.sendMessage(Text.literal(""), false);
         
         // Send options
-        List<DialogueNode.DialogueOption> options = node.getOptions();
-        for (int i = 0; i < options.size(); i++) {
-            player.sendMessage(Text.literal("§a[" + (i + 1) + "] " + options.get(i).getText().getString()), false);
+        for (int i = 0; i < node.getOptions().size(); i++) {
+            player.sendMessage(Text.literal("§a[" + (i + 1) + "] §7" + 
+                node.getOptions().get(i).getText()), false);
         }
     }
 

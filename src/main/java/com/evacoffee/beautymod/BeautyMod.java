@@ -1,27 +1,22 @@
 package com.evacoffee.beautymod;
 
 import com.evacoffee.beautymod.command.DialogueCommand;
+import com.evacoffee.beautymod.command.TestDialogueCommand;
 import com.evacoffee.beautymod.dialogue.DialogueManager;
 import com.evacoffee.beautymod.dialogue.DialogueNode;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Main mod class for the BeautyMod.
- */
 public class BeautyMod implements ModInitializer {
     public static final String MOD_ID = "beautymod";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -35,6 +30,7 @@ public class BeautyMod implements ModInitializer {
         // Register commands
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             DialogueCommand.register(dispatcher);
+            TestDialogueCommand.register(dispatcher);
         });
 
         // Register server lifecycle events
@@ -45,6 +41,15 @@ public class BeautyMod implements ModInitializer {
 
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             serverInstance = null;
+        });
+
+        // Register chat handler
+        ServerMessageEvents.CHAT_MESSAGE.register((message, sender, params) -> {
+            if (DialogueManager.isInDialogue(sender)) {
+                DialogueManager.handleChatInput(sender, message.getContent().getString());
+                return true; // Cancel the original message
+            }
+            return false;
         });
 
         // Register entity interaction handler
@@ -70,62 +75,122 @@ public class BeautyMod implements ModInitializer {
      */
     private static void registerDialogues() {
         // Greeting dialogue
-        new DialogueNode("greeting", "Villager", "Hello there, traveler! How can I help you today?")
-            .addOption("I'm looking for a quest", "quest_offer", player -> {
-                player.sendMessage(Text.literal("You show interest in a quest."));
+        new DialogueNode("greeting", "Villager", 
+                "Hello there, traveler! How can I help you today?")
+            .addOption("I'm looking for work", "work_options", player -> {
+                player.sendMessage(Text.literal("You ask about available work."));
             })
-            .addOption("Just passing through", "farewell", player -> {
-                player.sendMessage(Text.literal("You nod politely."));
+            .addOption("Tell me about this place", "village_info", player -> {
+                player.sendMessage(Text.literal("You ask about the village."));
+            })
+            .addOption("Do you have any quests?", "quest_options", player -> {
+                player.sendMessage(Text.literal("You inquire about quests."));
             })
             .addExitOption("Never mind", player -> {
                 player.sendMessage(Text.literal("You decide not to talk."));
             })
             .register();
 
-        // Quest offer dialogue
-        new DialogueNode("quest_offer", "Villager", 
-                "I have a task that needs doing. Will you help?")
-            .addOption("Yes, I'll help!", "quest_accepted", player -> {
-                player.sendMessage(Text.literal("You accepted the quest!"));
-                // Add quest logic here
+        // Work options
+        new DialogueNode("work_options", "Villager", 
+                "We always need help around here! What kind of work are you interested in?")
+            .addOption("Farming", "farming_work", player -> {
+                player.sendMessage(Text.literal("You express interest in farming."));
             })
-            .addOption("What's involved?", "quest_details", player -> {
-                player.sendMessage(Text.literal("You ask for more details."));
+            .addOption("Mining", "mining_work", player -> {
+                player.sendMessage(Text.literal("You ask about mining opportunities."));
             })
-            .addExitOption("Not right now", player -> {
-                player.sendMessage(Text.literal("Maybe next time."));
+            .addOption("Blacksmithing", "blacksmith_work", player -> {
+                player.sendMessage(Text.literal("You inquire about blacksmithing."));
             })
-            .register();
-
-        // More dialogue nodes...
-        new DialogueNode("quest_accepted", "Villager", 
-                "Thank you! Please bring me 10 wheat.")
-            .addExitOption("I'll be back soon!", player -> {
-                player.sendMessage(Text.literal("Quest started!"));
+            .addOption("Go back", "greeting", player -> {
+                player.sendMessage(Text.literal("You change your mind."));
             })
             .register();
 
-        new DialogueNode("quest_details", "Villager", 
-                "I need someone to gather 10 wheat from the fields. " +
-                "The crows have been stealing my crops!")
-            .addOption("I'll help with that", "quest_accepted", player -> {
-                player.sendMessage(Text.literal("You agree to help with the wheat."));
+        // Quest options
+        new DialogueNode("quest_options", "Villager", 
+                "I have several tasks that need attention. What interests you?")
+            .addOption("Monster hunting", "monster_hunt", player -> {
+                player.sendMessage(Text.literal("You ask about monster hunting quests."));
             })
-            .addExitOption("That sounds dangerous", player -> {
-                player.sendMessage(Text.literal("You decide against helping."));
+            .addOption("Item retrieval", "item_retrieval", player -> {
+                player.sendMessage(Text.literal("You ask about retrieving lost items."));
+            })
+            .addOption("Escort mission", "escort_mission", player -> {
+                player.sendMessage(Text.literal("You offer to escort someone."));
+            })
+            .addOption("Go back", "greeting", player -> {
+                player.sendMessage(Text.literal("You change your mind."));
             })
             .register();
 
-        new DialogueNode("farewell", "Villager", 
-                "Safe travels, friend. Come back if you change your mind!")
+        // Monster hunt quest
+        new DialogueNode("monster_hunt", "Villager", 
+                "There's been reports of a dangerous creature in the nearby caves. " +
+                "Can you investigate and eliminate the threat?")
+            .addOption("I'll take care of it", "monster_hunt_accepted", player -> {
+                player.sendMessage(Text.literal("You accept the monster hunting quest!"));
+                // Add quest start logic here
+            })
+            .addOption("What's the reward?", "monster_hunt_reward", player -> {
+                player.sendMessage(Text.literal("You ask about the reward."));
+            })
+            .addOption("That sounds too dangerous", "quest_options", player -> {
+                player.sendMessage(Text.literal("You decline the quest."));
+            })
+            .register();
+
+        // Monster hunt reward
+        new DialogueNode("monster_hunt_reward", "Villager", 
+                "I can offer you 10 emeralds and my eternal gratitude. " +
+                "The creature has been terrorizing our village for weeks!")
+            .addOption("Alright, I'll do it", "monster_hunt_accepted", player -> {
+                player.sendMessage(Text.literal("You accept the quest for the reward!"));
+                // Add quest start logic here
+            })
+            .addOption("I need more than that", "monster_hunt_negotiate", player -> {
+                player.sendMessage(Text.literal("You try to negotiate a better deal."));
+            })
+            .addOption("No thanks", "quest_options", player -> {
+                player.sendMessage(Text.literal("You decline the quest."));
+            })
+            .register();
+
+        // Monster hunt negotiation
+        new DialogueNode("monster_hunt_negotiate", "Villager", 
+                "Very well, I can offer you 15 emeralds, but that's my final offer!")
+            .addOption("Deal!", "monster_hunt_accepted", player -> {
+                player.sendMessage(Text.literal("You accept the improved offer!"));
+                // Add quest start logic with better reward
+            })
+            .addOption("I'll pass", "quest_options", player -> {
+                player.sendMessage(Text.literal("You decline the quest."));
+            })
+            .register();
+
+        // Village info
+        new DialogueNode("village_info", "Villager", 
+                "Our village has stood here for generations. " +
+                "We're mostly farmers, but we have a blacksmith and a general store. " +
+                "The mine to the north provides us with valuable resources.")
+            .addOption("Tell me about the history", "village_history", player -> {
+                player.sendMessage(Text.literal("You ask about the village's history."));
+            })
+            .addOption("Who's in charge here?", "village_leader", player -> {
+                player.sendMessage(Text.literal("You ask about the village leader."));
+            })
+            .addOption("Go back", "greeting", player -> {
+                player.sendMessage(Text.literal("You change the subject."));
+            })
+            .register();
+
+        // Exit node
+        new DialogueNode("goodbye", "Villager", 
+                "Farewell, traveler! Come back if you need anything else.")
             .register();
     }
 
-    /**
-     * Gets the current Minecraft server instance.
-     * @return The server instance, or null if not in a server context
-     */
-    @Nullable
     public static MinecraftServer getServer() {
         return serverInstance;
     }
