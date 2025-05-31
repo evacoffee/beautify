@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "beautymod:bouquet",
+    "beautymod:chocolate",
+    "minecraft:rose_bush",
+    "minecraft:peony",
+    "minecraft:lilac",
+    "minecraft:sunflower"
+  ]
+}

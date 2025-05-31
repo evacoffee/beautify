@@ -1,117 +1,64 @@
-// build.gradle
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'fabric-loom' version '1.0-SNAPSHOT'
     id 'maven-publish'
-    id 'java'
-    id 'idea'
-    id 'org.owasp.dependencycheck' version '8.2.1'
-    id 'checkstyle'
-    id 'pmd'
-    id 'com.github.spotbugs' version '5.0.13'
-    id 'org.sonarqube' version '4.0.0.2929'
 }
 
-// ... [rest of your existing build.gradle content] ...
+version = project.mod_version
+group = project.maven_group
 
-// Security and Quality Configuration
-checkstyle {
-    toolVersion = '10.3.3'
-    configFile = file("config/checkstyle/checkstyle.xml")
-    ignoreFailures = false
-    showViolations = true
+repositories {
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
-pmd {
-    toolVersion = '6.46.0'
-    ruleSetFiles = files("config/pmd/ruleset.xml")
-    ruleSets = []
-    ignoreFailures = false
-    consoleOutput = true
-}
-
-spotbugs {
-    toolVersion = '4.7.3'
-    ignoreFailures = false
-    showStackTraces = true
-    showProgress = true
-    effort = 'max'
-    reportLevel = 'high'
-}
-
-spotbugsMain {
-    reports {
-        html {
-            required = true
-            outputLocation = file("$buildDir/reports/spotbugs/main.html")
-            stylesheet = 'fancy-hist.xsl'
-        }
-    }
-}
-
-dependencyCheck {
-    formats = ['HTML', 'JSON']
-    failBuildOnCVSS = 7
-    suppressionFile = 'config/dependency-check/suppressions.xml'
-    analyzers {
-        assemblyEnabled = false
-        nodeAudit {
-            enabled = false
-        }
-    }
-}
-
-sonarqube {
-    properties {
-        property "sonar.projectKey", "evacoffee_beautymod"
-        property "sonar.organization", "evacoffee"
-        property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.java.checkstyle.reportPaths", "build/reports/checkstyle/main.xml"
-        property "sonar.java.pmd.reportPaths", "build/reports/pmd/main.xml"
-        property "sonar.java.spotbugs.reportPaths", "build/reports/spotbugs/main.xml"
-    }
-}
-
-// Add security dependencies
 dependencies {
-    // ... existing dependencies ...
-    
-    // Security
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
-    implementation 'commons-codec:commons-codec:1.15'
-    implementation 'org.owasp.encoder:encoder:1.2.3'
-    implementation 'com.google.guava:guava:31.1-jre'
-    
-    // Testing
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
-    testImplementation 'org.mockito:mockito-core:5.2.0'
-    testImplementation 'org.assertj:assertj-core:3.24.2'
-    
-    // Static Analysis
-    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // Configuration
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    modApi("com.terraformersmc:modmenu:${project.modmenu_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    // Mixin extras
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.2.0")))
 }
 
-// Configure test task
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
+processResources {
+    inputs.property "version", project.version
+    inputs.property "minecraft_version", project.minecraft_version
+    inputs.property "loader_version", project.loader_version
+    filteringCharset "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
     }
 }
 
-// Add security-related tasks
-task securityAudit {
-    group 'verification'
-    description 'Runs all security checks'
-    dependsOn 'check', 'dependencyCheckAnalyze'
+def targetJavaVersion = 17
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        it.options.release = targetJavaVersion
+    }
 }
 
-// Add a task to update dependencies
-task updateDependencies {
-    doLast {
-        println "Updating dependencies..."
-        exec {
-            commandLine './gradlew', '--refresh-dependencies', 'dependencies'
-        }
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+    archivesBaseName = project.archives_base_name
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
     }
 }

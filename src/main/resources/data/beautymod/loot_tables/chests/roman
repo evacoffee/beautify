@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 3,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "beautymod:bouquet",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "beautymod:chocolate",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:rose_bush",
+          "weight": 20
+        }
+      ]
+    }
+  ]
+}
