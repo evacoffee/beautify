@@ -3,6 +3,7 @@
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
+gradle-app.setting
 
 # IntelliJ IDEA
 .idea/
@@ -10,54 +11,91 @@ build/
 *.iml
 *.ipr
 out/
+*.ipr
+*.iws
 
 # Eclipse
 .settings/
 bin/
 .classpath
 .project
+.factorypath
+.checkstyle
+.springBeans
 
 # VSCode
 .vscode/
 *.code-workspace
+*.code-snippets
+.history/
+
+# Build outputs
+bin/
+build/
+out/
+target/
+
+# Logs
+logs/
+*.log
+log.txt
+
+# Minecraft
+run/
+saves/
+screenshots/
+usercache.json
+usernamecache.json
+*.dat
+*.dat_old
+*.log
+*.log.lck
+*.log.gz
+*.log.1
+debug/
+backup/
+*.bak
+*.dat
+*.dat_old
+*.dat_new
+*.dat_mcr
+*.dat_old_chest
+*.dat_old_ender
+*.dat_old_level
+*.dat_old_players
+*.dat_old_region
+
+# Local configuration
+*.properties
+*.json
+*.toml
+*.yaml
+*.yml
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
 
 # Mac OS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 # Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
-
-# Local configuration files
-*.properties
-*.json
-!gradle.properties
-!fabric.mod.json
-!mods.toml
-!gradle/wrapper/gradle-wrapper.properties
-
-# Logs
-logs/
-*.log
-logs/
-
-# Run configurations
-run/
-
-# Local data
-local/
-
-# Fabric
-fabric-server-launch.properties
-fabric-installer/
-
-# Minecraft
-eula.txt
-server.properties
-banned-ips.json
-banned-players.json
-ops.json
-usercache.json
-whitelist.json
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk

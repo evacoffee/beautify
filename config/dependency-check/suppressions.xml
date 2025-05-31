@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <!-- Add suppressions for false positives here -->
+    <suppress>
+        <notes><![CDATA[
+        File name: example-*.jar
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/.*/example-.*@.*$</packageUrl>
+        <vulnerabilityName>CVE-XXXX-XXXX</vulnerabilityName>
+    </suppress>
+</suppressions>

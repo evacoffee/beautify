@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ruleset name="BeautyMod Rules"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+    <description>BeautyMod PMD ruleset</description>
+    
+    <!-- Security rules -->
+    <rule ref="category/java/security.xml">
+        <exclude name="CipherWithNoIntegrity"/>
+        <exclude name="InsecureCryptoUsage"/>
+    </rule>
+    
+    <!-- Best practices -->
+    <rule ref="category/java/bestpractices.xml">
+        <exclude name="JUnit4TestShouldUseTestAnnotation"/>
+        <exclude name="JUnit5TestShouldBePackagePrivate"/>
+    </rule>
+    
+    <!-- Code style -->
+    <rule ref="category/java/codestyle.xml">
+        <exclude name="ShortVariable"/>
+    </rule>
+    
+    <!-- Design -->
+    <rule ref="category/java/design.xml">
+        <exclude name="UseUtilityClass"/>
+    </rule>
+    
+    <!-- Error prone -->
+    <rule ref="category/java/errorprone.xml">
+        <exclude name="CheckResultOfMethodCall"/>
+    </rule>
+</ruleset>
