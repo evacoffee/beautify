@@ -1,6 +1,8 @@
 package com.evacoffee.beautymod;
 
 import com.evacoffee.beautymod.command.*;
+import com.evacoffee.beautymod.init.ModDialogues;
+import com.evacoffee.beautymod.commands.TestDialogueCommand;
 import com.evacoffee.beautymod.config.ModConfig;
 import com.evacoffee.beautymod.config.ModMenuIntegration;
 import com.evacoffee.beautymod.data.PlayerDataManager;
@@ -82,9 +84,10 @@ public class BeautyMod implements ModInitializer {
             new AdminRelationshipCommand().register(dispatcher);
             new PermissionCommand().register(dispatcher);
             
-            // Debug commands
+            // Register test dialogue command (debug only)
             if (CONFIG.enableDebugCommands) {
                 new DebugRelationshipCommand().register(dispatcher);
+                TestDialogueCommand.register(dispatcher);
             }
         });
     }
@@ -133,6 +136,9 @@ public class BeautyMod implements ModInitializer {
         
         // Initialize proximity handler
         PartnerProximityHandler.initialize();
+        
+        // Initialize dialogue system
+        ModDialogues.register();
     }
     
     // Event handlers
@@ -181,6 +187,13 @@ public class BeautyMod implements ModInitializer {
     }
     
     private ActionResult onVillagerInteract(ServerPlayerEntity player, VillagerEntity villager, net.minecraft.util.Hand hand) {
+        // Check if the villager is a farmer (example condition)
+        if (villager.getVillagerData().getProfession().toString().contains("farmer")) {
+            // Start dialogue with the farmer
+            if (DialogueManager.startDialogue(player, "farmer_john_greeting")) {
+                return ActionResult.SUCCESS;
+            }
+        }
         // Check for dating interactions
         if (player.getStackInHand(hand).isEmpty()) {
             if (ModEvents.DATE_START.invoker().onDateStart(player, villager)) {
