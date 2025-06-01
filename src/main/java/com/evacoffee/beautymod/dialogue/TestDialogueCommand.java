@@ -11,19 +11,18 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 public class TestDialogueCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal("testdialogue")
-            .executes(context -> {
-                ServerPlayerEntity player = context.getSource().getPlayer();
-                if (player != null) {
-                    if (DialogueManager.isInDialogue(player)) {
-                        player.sendMessage(Text.literal("§cYou're already in a dialogue!"), false);
-                    } else {
-                        DialogueManager.startDialogue(player, "greeting");
-                        player.sendMessage(Text.literal("§aStarted test dialogue! Type numbers to select options."), false);
+        dispatcher.register(
+            literal("testdialogue")
+                .requires(source -> source.hasPermissionLevel(2))
+                .executes(context -> {
+                    ServerPlayerEntity player = context.getSource().getPlayer();
+                    if (player != null) {
+                        // Example dialogue - replace with your actual dialogue logic
+                        player.sendMessage(Text.literal("Starting test dialogue..."), false);
+                        // Add your dialogue start logic here
+                        return 1;
                     }
-                    return Command.SINGLE_SUCCESS;
-                }
-                return 0;
-            }));
-    }
-}
+                    return 0;
+                })
+        );
+    

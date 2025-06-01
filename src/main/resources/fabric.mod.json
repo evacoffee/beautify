@@ -2,11 +2,9 @@
   "schemaVersion": 1,
   "id": "beautymod",
   "version": "${version}",
-  "name": "BeautyMod",
-  "description": "Enhances relationships and social interactions in Minecraft",
-  "authors": [
-    "YourName"
-  ],
+  "name": "Beauty Mod",
+  "description": "A mod that adds relationship and dating mechanics to Minecraft",
+  "authors": ["YourUsername"],
   "contact": {
     "homepage": "https://github.com/yourusername/beautymod",
     "sources": "https://github.com/yourusername/beautymod",
@@ -20,47 +18,49 @@
       "com.evacoffee.beautymod.BeautyMod"
     ],
     "client": [
-      "com.evacoffee.beautymod.client.BeautyModClient"
-    ],
-    "server": [
-      "com.evacoffee.beautymod.server.BeautyModServer"
+      "com.evacoffee.beautymod.BeautyModClient"
     ],
     "modmenu": [
       "com.evacoffee.beautymod.config.ModMenuIntegration"
+    ],
+    "cardinal-components": [
+      "com.evacoffee.beautymod.components.ModComponents"
     ]
   },
   "mixins": [
     "beautymod.mixins.json"
   ],
-  "accessWidener": "beautymod.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.0",
     "fabric": "*",
-    "minecraft": "1.20.x",
+    "minecraft": "1.19.x",
     "java": ">=17",
-    "fabric-permissions-api-v0": "*",
-    "cloth-config": ">=10.0.0"
+    "cloth-config": ">=8.0.0",
+    "fabric-permissions-api-v0": "*"
   },
   "suggests": {
-    "modmenu": ">=4.0.0",
-    "cloth-config": ">=10.0.0"
-  },
-  "recommends": {
-    "modmenu": ">=4.0.0",
-    "cloth-config": ">=10.0.0"
-  },
-  "breaks": {
-    "optifabric": "*"
+    "modmenu": ">=4.0.0"
+
+    "entrypoints": {
+  "cardinal-components": [
+    "com.evacoffee.beautymod.components.ModComponents"
+  ]
+  
   },
   "custom": {
+    "cardinal-components": [
+      "beautymod:player_data",
+      "beautymod:dating",
+      "beautymod:marriage"
+    ],
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/yourdiscord",
         "modmenu.wiki": "https://github.com/yourusername/beautymod/wiki"
       }
-    },
-    "cardinal-components": [
-      "beautymod:player_data"
-    ]
+    }
+  },
+  "breaks": {
+    "optifabric": "*"
   }
 }

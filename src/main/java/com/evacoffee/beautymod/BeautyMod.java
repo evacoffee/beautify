@@ -2,12 +2,11 @@ package com.evacoffee.beautymod;
 
 import com.evacoffee.beautymod.command.*;
 import com.evacoffee.beautymod.init.ModDialogues;
-import com.evacoffee.beautymod.commands.TestDialogueCommand;
 import com.evacoffee.beautymod.config.ModConfig;
 import com.evacoffee.beautymod.config.ModMenuIntegration;
 import com.evacoffee.beautymod.data.PlayerDataManager;
 import com.evacoffee.beautymod.dialogue.DialogueManager;
-import com.evacoffee.beautymod.dialogue.DialogueNode;
+import com.evacoffee.beautymod.dialogue.TestDialogueCommand;
 import com.evacoffee.beautymod.event.ModEvents;
 import com.evacoffee.beautymod.event.PartnerProximityHandler;
 import com.evacoffee.beautymod.integration.ModIntegration;
@@ -23,6 +22,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -31,15 +31,18 @@ import net.minecraft.util.ActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
 import java.util.UUID;
 
 public class BeautyMod implements ModInitializer {
     public static final String MOD_ID = "beautymod";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static ModConfig CONFIG;
+    public static final String MOD_NAME = "Beauty Mod";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
+    public static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir().resolve(MOD_ID);
     
     private static BeautyMod instance;
     private static MinecraftServer serverInstance;
+    public static ModConfig CONFIG;
 
     public BeautyMod() {
         instance = this;
@@ -51,27 +54,32 @@ public class BeautyMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info("Initializing BeautyMod v{}", getModVersion());
-        
-        // Initialize configuration
-        AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
+        LOGGER.info("Initializing {} v{}", MOD_NAME, getModVersion());
+
+        // Create config directory if it doesn't exist
+        if (!CONFIG_DIR.toFile().exists()) {
+            CONFIG_DIR.toFile().mkdirs();
+        }
+
+        // Initialize configuation
+        AuthoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
         CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
-        
+
         // Register commands
         registerCommands();
-        
+
         // Register event handlers
-        registerEventHandlers();
-        
+        registerEvents();
+
         // Initialize systems
         initializeSystems();
-        
+
         // Register sounds
         ModSounds.registerSounds();
-        
-        LOGGER.info("BeautyMod has been initialized!");
+
+        LOGGER.info("{} has been successfully initialized!", MOD_NAME);
     }
-    
+
     private void registerCommands() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             // Core commands
@@ -106,10 +114,15 @@ public class BeautyMod implements ModInitializer {
             onPlayerLeave(handler.getPlayer());
         });
         
+        // Message events
+        ServerMessageEvents.CHAT_MESSAGE.register((message, player, params) -> {
+            // Handle chat messages if needed
+        });
+        
         // Interaction events
         UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             if (entity instanceof VillagerEntity) {
-                return onVillagerInteract(player, (VillagerEntity) entity, hand);
+                return onVillagerInteract((ServerPlayerEntity) player, (VillagerEntity) entity, hand);
             }
             return ActionResult.PASS;
         });
@@ -144,7 +157,7 @@ public class BeautyMod implements ModInitializer {
     // Event handlers
     private void onServerStarting(MinecraftServer server) {
         serverInstance = server;
-        LOGGER.info("BeautyMod is starting up with server...");
+        LOGGER.info("{} is initializing with server...", MOD_NAME);
         
         // Load data
         PlayerDataManager.loadAllData();
@@ -152,7 +165,7 @@ public class BeautyMod implements ModInitializer {
     }
     
     private void onServerStopped(MinecraftServer server) {
-        LOGGER.info("BeautyMod is shutting down...");
+        LOGGER.info("{} is shutting down...", MOD_NAME);
         
         // Save data
         PlayerDataManager.saveAllData();
@@ -162,6 +175,8 @@ public class BeautyMod implements ModInitializer {
     }
     
     private void onPlayerJoin(ServerPlayerEntity player) {
+        if (player == null) return;
+        
         UUID playerId = player.getUuid();
         
         // Load player data
@@ -177,6 +192,8 @@ public class BeautyMod implements ModInitializer {
     }
     
     private void onPlayerLeave(ServerPlayerEntity player) {
+        if (player == null) return;
+        
         UUID playerId = player.getUuid();
         
         // Save player data
@@ -203,62 +220,27 @@ public class BeautyMod implements ModInitializer {
         return ActionResult.PASS;
     }
     
-    private void onRelationshipChange(UUID player1, UUID player2, int oldLevel, int newLevel) {
-        // Handle relationship level changes
-        if (newLevel > oldLevel) {
-            // Relationship improved
-            ModIntegration.sendRelationshipUpdate(player1, player2, "improved", newLevel);
-        } else if (newLevel < oldLevel) {
-            // Relationship worsened
-            ModIntegration.sendRelationshipUpdate(player1, player2, "worsened", newLevel);
-        }
-        
-        // Check for achievements
-        AchievementManager.checkRelationshipAchievements(player1, player2, newLevel);
+    // Event handler stubs
+    private void onRelationshipChange(UUID player1, UUID player2, int oldStatus, int newStatus) {
+        // Handle relationship change
     }
     
-    private ActionResult onDateStart(ServerPlayerEntity player1, ServerPlayerEntity player2) {
-        if (player1 == null || player2 == null) return ActionResult.FAIL;
-        
-        // Check cooldown
-        if (!AntiHarassmentManager.canInteract(player1, player2)) {
-            return ActionResult.FAIL;
-        }
-        
-        // Start date logic
-        player1.sendMessage(Text.literal("You asked " + player2.getName().getString() + " on a date!"));
-        player2.sendMessage(Text.literal(player1.getName().getString() + " wants to go on a date with you!"));
-        
-        return ActionResult.SUCCESS;
+    private boolean onDateStart(ServerPlayerEntity player, VillagerEntity villager) {
+        // Handle date start
+        return false;
     }
     
-    private void onProposal(ServerPlayerEntity proposer, ServerPlayerEntity target) {
+    private boolean onProposal(ServerPlayerEntity proposer, ServerPlayerEntity target) {
         // Handle marriage proposal
-        if (proposer == null || target == null) return;
-        
-        proposer.sendMessage(Text.literal("You proposed to " + target.getName().getString() + "!"));
-        target.sendMessage(Text.literal(proposer.getName().getString() + " has proposed to you!"));
-        
-        // Play sound effect
-        ModSounds.playWeddingBells(proposer);
-        ModSounds.playWeddingBells(target);
-    }
-    
-    // Utility methods
-    public static MinecraftServer getServer() {
-        return serverInstance;
+        return false;
     }
     
     public static String getModVersion() {
-        try {
-            return BeautyMod.class.getPackage().getImplementationVersion();
-        } catch (Exception e) {
-            return "1.0.0";
-        }
-    }
-    
-    public static boolean isPlayerOnline(UUID playerId) {
-        if (serverInstance == null) return false;
-        return serverInstance.getPlayerManager().getPlayer(playerId) != null;
+        return FabricLoader.getInstance()
+                .getModContainer(MOD_ID)
+                .orElseThrow()
+                .getMetadata()
+                .getVersion()
+                .getFriendlyString();
     }
 }
