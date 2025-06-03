@@ -4,12 +4,14 @@ Enhance your Minecraft experience with BeautyMod, a comprehensive mod that adds 
 
 ## ✨ Features
 
-- **Romantic Relationships**: Form deep connections with NPCs and other players
-- **Marriage System**: Get married and enjoy special benefits with your partner
-- **Dating Quests**: Go on dates and complete romantic quests
-- **Memory System**: Create lasting memories with your loved ones
-- **Custom NPCs**: Interact with romanceable NPCs with unique personalities
-- **Emotional Expressions**: Show your feelings with new social interactions
+- **Romantic Relationships**: Build deep connections with NPCs and other players through meaningful interactions
+- **Marriage System**: Propose, get married, and unlock special partner benefits and shared gameplay features
+- **Dating Quests**: Experience unique dating scenarios with procedurally generated romantic quests
+- **Memory System**: Track your relationships with a dynamic memory system that remembers your interactions
+- **Custom NPCs**: Meet and romance diverse NPCs, each with distinct personalities and backstories
+- **Emotional Expressions**: Express your feelings with a variety of social interactions and animations
+- **Gift System**: Strengthen relationships by giving meaningful gifts to your loved ones
+- **Seasonal Events**: Special romantic events and interactions during in-game holidays
 
 ## 📥 Installation
 
@@ -41,5 +43,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- [GitHub Issues](https://github.com/yourusername/beautymod/issues)
-- [Discord](https://discord.gg/yourdiscord)
+- [Report Issues](https://github.com/evacoffee/beautify/issues)
+- [Join our Discord](https://discord.gg/beautymod) (coming soon!)
+- [Contribution Guidelines](CONTRIBUTING.md)

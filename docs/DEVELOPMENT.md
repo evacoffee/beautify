@@ -1,36 +1,55 @@
-# Development Guidelines
+# Development Guide
 
-## Security Best Practices
+## Prerequisites
+- Java 17 or higher
+- IntelliJ IDEA (recommended) or VS Code
+- Fabric Loom
 
-### Authentication & Authorization
-- Use the built-in permission system
-- Implement role-based access control
-- Always validate permissions on the server
+## Setup
+1. Clone the repository
+2. Run `./gradlew genSources` (Linux/macOS) or `gradlew genSources` (Windows)
+3. Import into your IDE as a Gradle project
 
-### Data Validation
-- Use the `DataValidator` class for all inputs
-- Implement strict type checking
-- Sanitize all user-generated content
-
-### Secure Communication
-- Use HTTPS for all external requests
-- Validate SSL certificates
-- Implement proper CORS policies
-
-### Error Handling
-- Never expose stack traces to users
-- Log security-relevant events
-- Use custom error pages
+## Project Structure
+```
+src/main/
+  ├── java/com/example/beautymod/
+  │   ├── api/           # Public API for other mods
+  │   ├── config/        # Configuration files
+  │   ├── entity/        # Custom entities
+  │   ├── event/         # Event handlers
+  │   ├── network/       # Network packets
+  │   ├── registry/      # Registry handlers
+  │   ├── system/        # Core systems
+  │   └── util/          # Utility classes
+  └── resources/         # Assets and data files
+```
 
 ## Code Style
+- Follow the [Fabric Community Guidelines](https://fabricmc.net/community/guidelines/)
+- Use 4 spaces for indentation
+- Class names in PascalCase
+- Methods and variables in camelCase
+- Constants in UPPER_SNAKE_CASE
 
-### General
-- Follow Java naming conventions
-- Use meaningful variable names
-- Keep methods small and focused
+## Testing
+Run tests with:
+```bash
+./gradlew test
+```
 
-### Documentation
-- Document public APIs
+## Pull Requests
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests
+5. Submit a PR with a clear description
+
+## Versioning
+We follow [Semantic Versioning](https://semver.org/):
+- MAJOR: Incompatible API changes
+- MINOR: Backwards-compatible functionality
+- PATCH: Backwards-compatible bug fixes
 - Include examples for complex functions
 - Keep comments up to date
 

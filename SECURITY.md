@@ -2,20 +2,50 @@
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.0.x   | :white_check_mark: |
-| < 1.0   | :x:                |
+|
+ Version 
+|
+ Supported          
+|
+|
+-------
+|
+------------------
+|
+|
+ 0.2.x   
+|
+ :white_check_mark: 
+|
+|
+ < 0.2   
+|
+ :x:                
+|
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in BeautyMod, please follow these steps:
+If you discover a security vulnerability in BeautyMod, please report it privately by emailing evmaagca@gmail.com
 
-1. **Do not** create a public GitHub issue
-2. Send an email to security@example.com with details of the vulnerability
-3. Include steps to reproduce the issue
-4. Provide any relevant logs or screenshots
-5. We will respond within 48 hours with our assessment
+**Please DO NOT file a public issue on Github for security vulnerabilities.**
+
+### When to report a vulnerability
+
+- For anything that could compromise the security of servers or users
+- For sensitive security isses (e.g., prvilege escalation, remote code execution)
+- For potential data leaks or informaiton disclosure
+
+### What to include in your report
+- Detailed description of the vulnerability
+- Steps to reproduce the issue
+- Impact of the vulnerability
+- Any potential mitigations or workarounds
+
+We will acknowledge receipt of your report within 3 business days and work to fix the issue as soon as possible while keeping you updated on the progress.
+
+## Security Updates
+
+Security updates will be realeased as patch versions (e.g., 1.0.0 -> 1.0.1) and will be clearly marked in the changelog.
 
 ## Security Measures
 
