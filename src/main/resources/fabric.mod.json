@@ -1,66 +1,43 @@
 {
   "schemaVersion": 1,
-  "id": "beautymod",
+  "id": "beautify",
   "version": "${version}",
-  "name": "Beauty Mod",
-  "description": "A mod that adds relationship and dating mechanics to Minecraft",
-  "authors": ["YourUsername"],
+  "name": "Beautify",
+  "description": "Advanced character customization and social interactions for Minecraft.",
+  "authors": [
+    "evacoffee
+  ],
   "contact": {
-    "homepage": "https://github.com/yourusername/beautymod",
-    "sources": "https://github.com/yourusername/beautymod",
-    "issues": "https://github.com/yourusername/beautymod/issues"
+    "homepage": "https://github.com/evacoffee/beautify",
+    "sources": "https://github.com/evacoffee/beautify",
+    "issues": "https://github.com/evacoffee/beautify/issues"
   },
   "license": "MIT",
-  "icon": "assets/beautymod/icon.png",
+  "icon": "assets/beautify/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.evacoffee.beautymod.BeautyMod"
+      "com.evacoffee.beautify.BeautifyMod"
     ],
     "client": [
-      "com.evacoffee.beautymod.BeautyModClient"
+      "com.evacoffee.beautify.client.BeautifyModClient"
     ],
-    "modmenu": [
-      "com.evacoffee.beautymod.config.ModMenuIntegration"
-    ],
-    "cardinal-components": [
-      "com.evacoffee.beautymod.components.ModComponents"
+    "cardinal-components-entity": [
+      "com.evacoffee.beautify.customization.component.CustomizationComponents"
     ]
   },
   "mixins": [
     "beautymod.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.0",
-    "fabric": "*",
-    "minecraft": "1.19.x",
+    "fabricloader": ">=0.14.21",
+    "fabric-api": "*",
+    "minecraft": "~1.20.1",
     "java": ">=17",
-    "cloth-config": ">=8.0.0",
-    "fabric-permissions-api-v0": "*"
+    "cardinal-components-base": ">=5.0.0",
+    "cardinal-components-entity": ">=5.0.0"
   },
   "suggests": {
-    "modmenu": ">=4.0.0"
-
-    "entrypoints": {
-  "cardinal-components": [
-    "com.evacoffee.beautymod.components.ModComponents"
-  ]
-  
-  },
-  "custom": {
-    "cardinal-components": [
-      "beautymod:player_data",
-      "beautymod:dating",
-      "beautymod:marriage"
-    ],
-    "modmenu": {
-      "links": {
-        "modmenu.discord": "https://discord.gg/yourdiscord",
-        "modmenu.wiki": "https://github.com/yourusername/beautymod/wiki"
-      }
-    }
-  },
-  "breaks": {
-    "optifabric": "*"
+    "cloth-config": "*"
   }
 }
