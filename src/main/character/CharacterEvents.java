@@ -10,12 +10,12 @@ import java.util.List;
 public class CharacterEvents {
     private static final Random RANDOM = Random.create();
     
-    // Character types
+
     public enum CharacterType {
         ROMANTIC, SHY, BOLD, PLAYFUL, MYSTERIOUS, GENTLE
     }
 
-    // Random greetings based on character type and relationship level
+
     public static Text getRandomGreeting(CharacterType type, int relationshipLevel) {
         List<String> greetings = switch (type) {
             case ROMANTIC -> Arrays.asList(
@@ -52,7 +52,7 @@ public class CharacterEvents {
         return Text.of(greetings.get(RANDOM.nextInt(greetings.size())));
     }
 
-    // Random events that can happen with characters
+
     public static void triggerRandomEvent(PlayerEntity player, CharacterType type) {
         int eventType = RANDOM.nextInt(10); // 10 different possible events
         
@@ -62,7 +62,7 @@ public class CharacterEvents {
             case 2 -> shareSecret(player, type);
             case 3 -> askForHelp(player, type);
             case 4 -> complimentPlayer(player, type);
-            // Add more events as needed
+
             default -> {
                 // No special event this time
                 player.sendMessage(Text.of(getRandomIdleComment(type)), false);
@@ -80,7 +80,7 @@ public class CharacterEvents {
             case GENTLE -> "a handmade gift";
         };
         player.sendMessage(Text.of("I have something for you... " + gift), false);
-        // Add item to player's inventory here
+
     }
 
     private static void startMiniGame(PlayerEntity player, CharacterType type) {
@@ -142,7 +142,7 @@ public class CharacterEvents {
         };
     }
 
-    // Get a random character type
+
     public static CharacterType getRandomCharacterType() {
         return CharacterType.values()[RANDOM.nextInt(CharacterType.values().length)];
     }

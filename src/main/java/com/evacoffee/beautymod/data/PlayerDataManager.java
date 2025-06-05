@@ -19,12 +19,12 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class PlayerDataManager {
-    private static final Logger LOGGER = LogManager.getLogger("Beautify/PlayerDataManager");
-    private static final String DATA_FOLDER = "beautymod_data";
-    private static final String BACKUP_FOLDER = "beautymod_backups";
+    private static final Logger LOGGER = LogManager.getLogger(BeautyMod.MOD_ID + "/PlayerDataManager");
+    private static final String DATA_FOLDER = BeautyMod.MOD_ID + "_data";
+    private static final String BACKUP_FOLDER = BeautyMod.MOD_ID + "_backups";
     private static final int MAX_BACKUPS = 5;
     private static final Executor IO_EXECUTOR = Executors.newSingleThreadExecutor(r -> {
-        Thread t = new Thread(r, "Beautify-Data-IO");
+        Thread t = new Thread(r, BeautyMod.MOD_ID + "-Data-IO");
         t.setDaemon(true);
         return t;
     });

@@ -25,7 +25,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in BeautyMod, please report it privately by emailing evmaagca@gmail.com
+If you discover a security vulnerability in BeautyMod, please report it privately by emailing evmaagca@gmail.com.
 
 **Please DO NOT file a public issue on Github for security vulnerabilities.**
 

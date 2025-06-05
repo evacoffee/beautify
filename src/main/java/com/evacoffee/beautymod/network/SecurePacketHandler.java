@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class SecurePacketHandler {
-    private static final Logger LOGGER = LogManager.getLogger("Beautify/SecurePacketHandler");
+    private static final Logger LOGGER = LogManager.getLogger(BeautyMod.MOD_ID + "/SecurePacketHandler");
     private static final long RATE_LIMIT = 100;
     private static final long RATE_LIMIT_INTERVAL = 1;
     private static final int MAX_PACKET_SIZE = 32767;

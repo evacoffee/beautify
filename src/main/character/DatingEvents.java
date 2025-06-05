@@ -28,7 +28,7 @@ public class DatingEvents {
         
         player.sendMessage(Text.of("§d" + eventDescription), false);
         
-        // Trigger additional effects based on the event
+
         switch (eventType) {
             case ROMANTIC_DATE -> triggerRomanticDate(player);
             case SPORTING_EVENT -> triggerSportingEvent(player);
@@ -40,7 +40,7 @@ public class DatingEvents {
     }
 
     private static EventType determineEventType(Gender playerGender, Gender npcGender) {
-        // Customize event probabilities based on gender combinations
+
         if (playerGender == Gender.FEMALE && npcGender == Gender.MALE) {
             return EventType.ROMANTIC_DATE;  // Traditional romantic date
         } else if (playerGender == Gender.MALE && npcGender == Gender.FEMALE) {
@@ -50,7 +50,7 @@ public class DatingEvents {
         } else if (playerGender == Gender.MALE && npcGender == Gender.MALE) {
             return EventType.GAMING_SESSION;  // Gaming together
         } else {
-            // For non-binary or other combinations, pick a random event
+
             return EventType.values()[RANDOM.nextInt(EventType.values().length)];
         }
     }
@@ -78,17 +78,17 @@ public class DatingEvents {
         };
     }
 
-    // Event-specific methods
+
     private static void triggerRomanticDate(PlayerEntity player) {
         player.sendMessage(Text.of("§5The atmosphere is filled with romance..."), false);
-        // Add romantic effects
+
         player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
             net.minecraft.entity.effect.StatusEffects.REGENERATION, 600, 1));
     }
 
     private static void triggerSportingEvent(PlayerEntity player) {
         player.sendMessage(Text.of("§6The crowd cheers as the game begins!"), false);
-        // Add excitement effects
+
         player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
             net.minecraft.entity.effect.StatusEffects.SPEED, 1200, 0));
     }
@@ -118,7 +118,7 @@ public class DatingEvents {
             net.minecraft.entity.effect.StatusEffects.HASTE, 1800, 0));
     }
 
-    // Helper method to get random gender (for testing)
+
     public static Gender getRandomGender() {
         return Gender.values()[RANDOM.nextInt(Gender.values().length)];
     }

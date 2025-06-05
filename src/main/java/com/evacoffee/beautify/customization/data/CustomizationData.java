@@ -3,19 +3,17 @@ package com.evacoffee.beautify.customization.data;
 import net.minecraft.nbt.CompoundTag;
 
 public class CustomizationData {
-    //Appearance
     private String skinTone = "DEFAULT";
     private String hairColor = "DEFAULT";
-    private int hairColor = 0x000000; //Black
-    private int eyeColor = 0x0000FF; //Blue
-    private float height = 1.8f;    //Default height in blocks
+    private int hairColor = 0x000000;
+    private int eyeColor = 0x0000FF;
+    private float height = 1.8f;
 
-    //Accessories
     private String hat = "NONE";
     private String glasses = "NONE";
-    private String accessory = "NONE"; // e.g., necklace, bracelet, etc.
+    private String accessory = "NONE";
     
-    // Getters and Setters for all fields
+
     public String getSkinTone() { return skinTone; }
     public void setSkinTone(String skinTone) { this.skinTone = skinTone; }
     
@@ -49,7 +47,7 @@ public class CustomizationData {
     public String getAccessory() { return accessory; }
     public void setAccessory(String accessory) { this.accessory = accessory; }
 
-    // Serialization to NBT
+
     public CompoundTag toNbt() {
         CompoundTag tag = new CompoundTag();
         tag.putString("skinTone", skinTone);
@@ -66,7 +64,7 @@ public class CustomizationData {
         return tag;
     }
 
-    // Deserialization from NBT
+
     public static CustomizationData fromNbt(CompoundTag tag) {
         CustomizationData data = new CustomizationData();
         if (tag != null) {

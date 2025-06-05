@@ -1,6 +1,6 @@
 package com.evacoffee.beautify.customization.component;
 
-import com.evacoffee.beautify.BeautifyMod; // Make sure BeautifyMod.MOD_ID is defined
+import com.evacoffee.beautify.BeautifyMod;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
@@ -25,7 +25,7 @@ public class CustomizationComponents implements EntityComponentInitializer {
         registry.registerForPlayers(
             CUSTOMIZATION,
             player -> new CustomizationComponent(),
-            RespawnCopyStrategy.ALWAYS_COPY // Or .LOSSLESS_ONLY if preferred
+            RespawnCopyStrategy.ALWAYS_COPY
         );
     }
 }

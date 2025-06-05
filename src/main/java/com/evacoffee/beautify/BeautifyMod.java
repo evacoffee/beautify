@@ -27,7 +27,7 @@ public class BeautifyMod implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     private static final String KEYSTORE_FILE = "beautify-keystore.bks";
     private static final String KEY_ALIAS = "beautify_key";
-    private static final String KEYSTORE_PASSWORD = System.getenv("BEAUTIFY_KEYSTORE_PASSWORD");
+    private static final String KEYSTORE_PASSWORD ="BigbackfoodiE27";
     
     private static RateLimiter<UUID> rateLimiter;
     

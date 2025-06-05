@@ -19,7 +19,7 @@ public class BeautifyModClient implements ClientModInitializer {
     public void onInitializaClient() {
         BeautifyMod.LOGGER.info("BeautifyModClient initializing...");
 
-        // Client-side network receivers
+
         CustomizationNetworkHandler.registerClientReceivers();
 
         openCustomizationScreenKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -37,13 +37,10 @@ public class BeautifyModClient implements ClientModInitializer {
             }
         });
         
-        //Request full sync when joining a world or when new players are loaded
+
         ClientPlayConnectionEvents.JOIN.register((handler,sender,client) -> {
             if (client.player != null) {
-                // This logic is tricky. The server should send updates for all players
-                // to the newly joined player.
-                // A simple way is to have the server send all known player customizations
-                // upon join, or upon player chunk load.
+
             }
         });
         

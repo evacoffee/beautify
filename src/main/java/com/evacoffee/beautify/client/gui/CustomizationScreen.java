@@ -14,11 +14,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 
 public class CustomizationScreen extends Screen {
-    private final CustomizationData originalData; // Store original to revert if needed
-    private CustomizationData currentData;    // Data being modified
+    private final CustomizationData originalData;
+    private CustomizationData currentData;
     private PlayerEntity player;
 
-    // Example: Simple selectors
+
     private ButtonWidget skinToneButton;
     private ButtonWidget hairStyleButton;
     private ButtonWidget hairColorButton;
@@ -28,7 +28,7 @@ public class CustomizationScreen extends Screen {
         super(Text.translatable("gui.beautify.customization.title"));
         this.player = player;
         CustomizationComponent component = CustomizationComponents.get(player);
-        // Deep copy to avoid modifying the component's data directly until save
+
         this.originalData = CustomizationData.fromNbt(component.getData().toNbt()); 
         this.currentData = CustomizationData.fromNbt(component.getData().toNbt());
     }
@@ -42,34 +42,29 @@ public class CustomizationScreen extends Screen {
         int startY = this.height / 4;
         int yOffset = buttonHeight + 5;
 
-        // Skin Tone (Example: Cycle through a list)
+
         skinToneButton = ButtonWidget.builder(
                 Text.translatable("gui.beautify.customization.skin_tone").append(": " + currentData.getSkinTone()),
                 button -> {
-                    // Cycle logic for skin tone
-                    // For example: List<String> skinTones = List.of("LIGHT", "MEDIUM", "DARK");
-                    // int currentIndex = skinTones.indexOf(currentData.getSkinTone());
-                    // currentData.setSkinTone(skinTones.get((currentIndex + 1) % skinTones.size()));
-                    // button.setMessage(Text.translatable("gui.beautify.customization.skin_tone").append(": " + currentData.getSkinTone()));
+
                 })
             .dimensions(startX, startY, buttonWidth, buttonHeight).build();
         this.addDrawableChild(skinToneButton);
 
-        // Hair Style
+
         hairStyleButton = ButtonWidget.builder(
                 Text.translatable("gui.beautify.customization.hair_style").append(": " + currentData.getHairStyle()),
                 button -> {
-                    // Cycle logic for hair style
+
                 })
             .dimensions(startX, startY + yOffset, buttonWidth, buttonHeight).build();
         this.addDrawableChild(hairStyleButton);
         
-        // Hair Color (Example: Open a color picker or cycle presets)
+
         hairColorButton = ButtonWidget.builder(
-                Text.translatable("gui.beautify.customization.hair_color"), // Potentially show current color
+                Text.translatable("gui.beautify.customization.hair_color"),
                 button -> {
-                    // Logic for changing hair color
-                    // currentData.setHairColor(newColor);
+
                 })
             .dimensions(startX, startY + yOffset * 2, buttonWidth, buttonHeight).build();
         this.addDrawableChild(hairColorButton);
@@ -85,7 +80,7 @@ public class CustomizationScreen extends Screen {
 
         // Cancel Button
         this.addDrawableChild(ButtonWidget.builder(Text.translatable("gui.beautify.cancel"), button -> {
-                this.close(); // Or revert to originalData if you want a true cancel
+                this.close();
             })
             .dimensions(this.width / 2 + 2, this.height - 40, 98, 20).build());
     }

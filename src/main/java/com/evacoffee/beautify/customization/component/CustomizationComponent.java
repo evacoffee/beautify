@@ -18,7 +18,7 @@ public class CustomizationComponent implements Component {
 
     @Override
     public void readFromNbt(CompoundTag tag) {
-        if (tag.contains("CustomizationData", 10)) { // 10 is the NBT type for CompoundTag
+        if (tag.contains("CustomizationData", 10)) {
             this.data = CustomizationData.fromNbt(tag.getCompound("CustomizationData"));
         } else {
             this.data = new CustomizationData();
