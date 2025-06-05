@@ -1,112 +1,131 @@
 package com.evacoffee.beautymod.dating;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
-import java.util.Objects;
+public class DateLocationManager {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final String SAVE_FILE = "date_locations.json";
 
-public class DateLocation {
-    private final String name;
-    private final DateType type;
-    private final BlockPos position;
-    private final RegistryKey<World> dimension;
-    private final String ownerUuid;
-    private int popularity; // Higher means more likely to be picked for random dates
-    private boolean isPublic;
+    private final Map<UUID, DateLocation> locations = new ConcurrentHashMap<>();
+    private final Path savePath;
+    private final MinecraftServer server;
 
-    public DateLocation(String name, DateType type, BlockPos position, World world, String ownerUuid) {
-        this.name = name;
-        this.type = type;
-        this.position = position;
-        this.dimension = world.getRegistryKey();
-        this.ownerUuid = ownerUuid;
-        this.popularity = 0;
-        this.isPublic = false;
+    public DateLocationManager(MinecraftServer server) {
+        this.server = server;
+        this.savePath = server.getRunDirectory().toPath()
+                .resolve("saves")
+                .resolve(server.getSaveProperties().getLevelName())
+                .resolve(BeautyMod.MOD_ID)
+                .resolve(SAVE_FILE);
     }
 
-    // Getters
-    public String getName() { return name; }
-    public DateType getType() { return type; }
-    public BlockPos getPosition() { return position; }
-    public RegistryKey<World> getDimension() { return dimension; }
-    public String getOwnerUuid() { return ownerUuid; }
-    public int getPopularity() { return popularity; }
-    public boolean isPublic() { return isPublic; }
-
-    // Setters
-    public void setPublic(boolean isPublic) { this.isPublic = isPublic; }
-    public void incrementPopularity() { popularity = Math.min(popularity + 1, 100); }
-
-    public double distanceTo(BlockPos pos) {
-        return Math.sqrt(position.getSquaredDistance(pos));
+    public boolean removeLocation(UUID id) {
+        if (locations.remove(id) != null) {
+            saveLocations();
+            return true;
+        }
+        return false;
     }
 
-    public boolean isAtLocation(BlockPos pos, World world) {
-        return this.dimension == world.getRegistryKey() && distanceTo(pos) < 10; // 10 block radius
+    public Optional<DateLocation> getLocation(UUID id) {
+        return Optional.ofNullable(locations.get(id));
     }
 
-    public boolean isInSameDimension(World world) {
-        return this.dimension == world.getRegistryKey();
+    public List<DateLocation> getPublicLocations() {
+        return locations.values().stream()
+                .filter(DateLocations::isPublic)
+                .toList();
     }
 
-    // Serialization
-    public NbtCompound toNbt() {
-        NbtCompound nbt = new NbtCompound();
-        nbt.putString("name", name);
-        nbt.putString("type", type.name());
-        nbt.putIntArray("pos", new int[]{position.getX(), position.getY(), position.getZ()});
-        nbt.putString("dimension", dimension.getValue().toString());
-        nbt.putString("owner", ownerUuid);
-        nbt.putInt("popularity", popularity);
-        nbt.putBoolean("isPublic", isPublic);
-        return nbt;
+    public List<DateLocation> getPlayerLocations(String playerUuid) {
+        return locations.values().stream()
+                .filter(loc -> loc.getOwnerUuid().equals(playerUuid))
+                .toList();
     }
 
-    public static DateLocation fromNbt(NbtCompound nbt, ServerWorld world) {
-        String name = nbt.getString("name");
-        DateType type = DateType.valueOf(nbt.getString("type"));
-        int[] posArray = nbt.getIntArray("pos");
-        BlockPos pos = new BlockPos(posArray[0], posArray[1], posArray[2]);
-        String ownerUuid = nbt.getString("owner");
-        
-        DateLocation location = new DateLocation(name, type, pos, world, ownerUuid);
-        location.popularity = nbt.getInt("popularity");
-        location.isPublic = nbt.getBoolean("isPublic");
-        
-        return location;
+    public void loadLocations() {
+        if (!Files.exist(savePath)) {
+            return;
+        }
+
+        try (Reader reader = Files.newBufferedReader(savePath)) {
+            List<DateLocationSaveData> savedData = GSON.fromJson(
+                reader,
+                new TypeToken<List<DateLocationSaveData>>(){}.getType()
+            );
+
+            locations.clear();
+            for (DateLocationSaveData data : savedData) {
+                World world  = server.getWorld(RegistryKey.of(Registry.WORLD_KEY, new Identifer(data.dimension)));
+                if (world == null) {
+                    DateLocation loc = new DateLocation(
+                        data.name,
+                        DateType.byId(data.typeId),
+                        new BlockPos(data.x, data.y, data.z),
+                        world,
+                        data.ownerUuid,
+                        data.isPublic,
+                        data.capacity
+                    );
+                    locations.put(data.id, loc);
+                }
+            }
+        } catch (IOException e) {
+            BeautyMod.LOGGER.error("Failed to load date locations", e);
+        }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DateLocation that = (DateLocation) o;
-        return name.equals(that.name) && 
-               type == that.type && 
-               position.equals(that.position) && 
-               dimension.equals(that.dimension) && 
-               ownerUuid.equals(that.ownerUuid);
+    public void saveLocations() {
+        try {
+            Files.createDirectories(savePath.getParent());
+            List<DateLocationSaveData> saveData = locations.entrySet().stream()
+                .map(entry -> new DateLocationSaveData(entry.getKey(), entry.getValue()))
+                .toList();
+                
+            try (Writer writer = Files.newBufferedWriter(savePath)) {
+                GSON.toJson(saveData, writer);
+            }
+        } catch (IOException e) {
+            BeautyMod.LOGGER.error("Failed to save date locations", e);
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, type, position, dimension, ownerUuid);
-    }
+    private static class DateLocationSaveData {
+        final UUID id;
+        final String name;
+        final String typeId;
+        final String dimension;
+        final int x, y, z;
+        final String ownerUuid;
+        final boolean isPublic;
+        final int capacity;
 
-    @Override
-    public String toString() {
-        return String.format("%s (%s) at [%d, %d, %d] in %s", 
-            name, 
-            type, 
-            position.getX(), 
-            position.getY(), 
-            position.getZ(),
-            dimension.getValue().getPath());
+        DateLocationSaveData(UUID id, DateLocation location) {
+            this.id = id;
+            this.name = location.getName();
+            this.typeId = location.getType().getId();
+            this.dimension = location.getWorld().getRegistryKey().getValue().toString();
+            BlockPos pos = location.getPosition();
+            this.x = pos.getX();
+            this.y = pos.getY();
+            this.z = pos.getZ();
+            this.ownerUuid = location.getOwnerUuid();
+            this.isPublic = location.isPublic();
+            this.capacity = location.getCapacity();
+        }
     }
-}
+}           
