@@ -1,6 +1,6 @@
-# BeautyMod for Minecraft
+# beautify for Minecraft
 
-Enhance your Minecraft experience with BeautyMod, a comprehensive mod that adds deep social interactions, relationships, and romantic gameplay elements to your world.
+Enhance your Minecraft experience with beautify, a comprehensive mod that adds deep social interactions, relationships, and romantic gameplay elements to your world.
 
 ## ✨ Features
 
