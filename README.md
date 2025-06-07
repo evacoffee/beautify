@@ -2,6 +2,8 @@
 
 Enhance your Minecraft experience with beautify, a comprehensive mod that adds deep social interactions, relationships, and romantic gameplay elements to your world.
 
+*small use of AI for checking purposes*
+
 ## ✨ Features
 
 - **Romantic Relationships**: Build deep connections with NPCs and other players through meaningful interactions
