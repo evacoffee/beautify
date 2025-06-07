@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautify - Your Personal Skincare Companion</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">Beautify</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#routines">Routines</a></li>
+                <li><a href="#tutorials">Tutorials</a></li>
+                <li><a href="#analysis">Skin Analysis</a></li>
+                <li><a href="#reviews">Reviews</a></li>
+            </ul>
+            <button class="theme-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Discover Your Perfect Skincare Routine</h1>
+                    <p>AI-powered recommendations for your unique skin type and concerns</p>
+                    <div class="cta-buttons">
+                        <button class="btn-primary">Get Started</button>
+                        <button class="btn-outline">Watch Demo</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="routines" class="section">
+            <div class="container">
+                <h2>Popular Skincare Routines</h2>
+                <div class="routine-grid">
+                    <!-- Routine cards will be dynamically added -->
+                </div>
+            </div>
+        </section>
+
+        <section id="tutorials" class="section">
+            <div class="container">
+                <h2>Makeup Tutorials</h2>
+                <div class="tutorial-grid">
+                    <!-- Tutorial cards will be dynamically added -->
+                </div>
+            </div>
+        </section>
+
+        <section id="analysis" class="section">
+            <div class="container">
+                <h2>AI Skin Analysis</h2>
+                <div class="upload-area">
+                    <label for="skin-upload">
+                        <i class="fas fa-camera"></i>
+                        <p>Upload a selfie to get personalized recommendations</p>
+                    </label>
+                    <input type="file" id="skin-upload" accept="image/*" class="sr-only">
+                </div>
+            </div>
+        </section>
+
+        <section id="reviews" class="section">
+            <div class="container">
+                <h2>Community Reviews</h2>
+                <div class="reviews-grid">
+                    <!-- Review cards will be dynamically added -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Beautify</h4>
+                    <p>Your personal skincare companion</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#routines">Routines</a></li>
+                        <li><a href="#tutorials">Tutorials</a></li>
+                        <li><a href="#analysis">Analysis</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Beautify. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
